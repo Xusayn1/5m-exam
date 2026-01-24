@@ -72,7 +72,7 @@ async def get_connection():
         host="localhost"
     )
 
-async def fetch_query(query: str, params: tuple = ()):
+async def fetch_query(query: str, params: tuple = (), fetch="all") -> Optional[DictRow]:
     conn = await get_connection()
     try:
         return await conn.fetch(query, *params)
