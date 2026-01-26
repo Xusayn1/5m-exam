@@ -8,9 +8,9 @@ users = """
         id serial primary key ,
         username varchar(20) not null,
         password varchar(20) not null,
-        is_login boolean not null,
-        is_admin boolean not null,
-        email varchar(20) not null,
+        is_login boolean not null default false,
+        is_admin boolean not null default false,
+        email varchar(20) not null default false,
         created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
 """
@@ -63,11 +63,21 @@ durations = """
     );
 """
 
+codes = """
+    CREATE TABLE codes (
+        id SERIAL PRIMARY KEY,
+        email VARCHAR(255) NOT NULL,
+        code VARCHAR(10) NOT NULL,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ); """
+
+
 
 def create_tables():
     execute_query(users)
     execute_query(products)
     execute_query(menu)
     execute_query(durations)
+    execute_query(codes)
     print("Tables created successfully")
     logging.debug("Tables created successfully")

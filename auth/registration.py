@@ -11,6 +11,7 @@ logger = logging.getLogger(__name__)
 def register() -> bool:
     """
     Handles user registration process including email verification.
+    :rtype: bool
     :return: True if registration and validation are successful, else False.
     """
     username: str = input("Username: ")
@@ -44,7 +45,7 @@ def register() -> bool:
     print("Registration failed. Please try again later.")
     return False
 
-def login() -> bool:
+def login() -> dict | None:
     """
     Authenticates user and updates login status.
     :return: True if credentials are valid and account is active, else False.
@@ -52,21 +53,24 @@ def login() -> bool:
     email: str = input("Email: ")
     password: str = input("Password: ")
     if email == admin_email and password == admin_password:
-        return True
+        return {"username": "Admin", "email": admin_email, "is_admin": True}
     query: str = "SELECT * FROM users WHERE email=%s AND password=%s"
     user: Optional[DictRow] = execute_query(query=query, params=(email, password), fetch="one")
 
     if user:
         if not user['is_active']:
             print("Account not active. Please verify your email.")
-            return validate_ui(email)
+            if validate_ui(email):
+                user = execute_query(query=query, params=(email, password), fetch="one")
+            else:
+                return None
 
         execute_query(query="UPDATE users SET is_login=True WHERE email = %s", params=(email,))
         print(f"Welcome back, {user['username']}!")
-        return True
+        return dict(user)
 
     print("Invalid email or password.")
-    return False
+    return None
 
 def validate_ui(email: str) -> bool:
     """

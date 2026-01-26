@@ -36,6 +36,7 @@ def generate_code(user_email: str) -> Optional[str]:
     delete_query: str = "DELETE FROM codes WHERE email = %s"
     execute_query(query=delete_query, params=(user_email,))
 
+    print("DEBUG: generate_code() chaqirildi")
     code: str = str(random.randint(100000, 999999))
 
     insert_query: str = "INSERT INTO codes (email, code) VALUES (%s, %s)"
