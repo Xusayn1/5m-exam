@@ -1,14 +1,13 @@
 from auth.confirmation import *
 import logging
 from psycopg2.extras import DictRow
-from typing import Any, Optional
 from core.config import *
 from core.db_settings import execute_query
-
+from typing import Optional, Any, Dict
 logger = logging.getLogger(__name__)
 
 
-def register() -> bool:
+def register() -> Optional[Dict[str, Any]]:
     """
     Handles user registration process including email verification.
     :rtype: bool
@@ -20,14 +19,14 @@ def register() -> bool:
     check_query: str = "SELECT id FROM users WHERE email = %s"
     if execute_query(query=check_query, params=(email,), fetch="one"):
         print("This email is already registered.")
-        return False
+        return None
 
     password: str = input("Password: ")
     confirm_password: str = input("Confirm Password: ")
 
     if password != confirm_password:
         print("Passwords do not match.")
-        return False
+        return None
 
     query: str = "INSERT INTO users (username, email, password) VALUES (%s, %s, %s)"
     params: tuple[str, str, str] = (username, email, password)
@@ -40,10 +39,16 @@ def register() -> bool:
                 body=f"Your verification code is: {code}"
         ):
             print("Confirmation code sent to your email.")
-            return validate_ui(email)
 
-    print("Registration failed. Please try again later.")
-    return False
+            if validate_ui(email):
+                user_query = "SELECT * FROM users WHERE email=%s"
+                user_data = execute_query(query=user_query, params=(email,), fetch="one")
+                return dict(user_data)
+
+            print("Registration failed. Please try again later.")
+            return None
+
+    return None
 
 def login() -> dict | None:
     """
@@ -71,6 +76,7 @@ def login() -> dict | None:
 
     print("Invalid email or password.")
     return None
+
 
 def validate_ui(email: str) -> bool:
     """

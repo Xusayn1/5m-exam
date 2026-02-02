@@ -2,6 +2,7 @@ import asyncio
 import logging
 import auth.registration as registration
 import utils.menus as menus
+# from core.models import create_tables
 from utils import functions
 
 logger = logging.getLogger(__name__)
@@ -47,7 +48,7 @@ async def admin_menu():
             elif option == 3:
                 await functions.remove_products()
             elif option == 4:
-                functions.today_menu()  # sync function bo‘lgani uchun await kerak emas
+                functions.today_menu()
             elif option == 5:
                 await functions.add_product_today_menu()
             elif option == 6:
@@ -64,15 +65,15 @@ async def admin_menu():
             logger.info('please enter a number')
 
 
-async def user_menu():
+async def user_menu(user):
     while True:
         try:
             print(menus.User_menu)
             option = int(input('choose an option: '))
             if option == 1:
-                functions.today_menu()  # sync
+                functions.today_menu()
             elif option == 2:
-                await functions.order()
+                await functions.order(user)
             elif option == 3:
                 await functions.show_my_orders()
             elif option == 4:
@@ -86,3 +87,4 @@ async def user_menu():
 
 if __name__ == '__main__':
     asyncio.run(show_auth_menu())
+    # create_tables()

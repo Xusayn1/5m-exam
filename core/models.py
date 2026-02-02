@@ -46,10 +46,10 @@ orders = """
     amount integer not null,
     status varchar(20) not null,
     order_type varchar(20) not null,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     
     foreign key (user_id) references users(id),
-    foreign key (menu_id) references menu(id),
+    foreign key (menu_id) references menus(id)
     );
 """
 
@@ -74,10 +74,11 @@ codes = """
 
 
 def create_tables():
-    execute_query(users)
-    execute_query(products)
-    execute_query(menu)
-    execute_query(durations)
-    execute_query(codes)
+    # execute_query(users)
+    # execute_query(products)
+    # execute_query(menu)
+    # execute_query(durations)
+    # execute_query(codes)
+    execute_query(orders)
     print("Tables created successfully")
     logging.debug("Tables created successfully")
