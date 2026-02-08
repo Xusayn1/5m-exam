@@ -150,7 +150,7 @@ async def show_orders_by_time() -> None:
 
 def change_order_status() -> None:
     """
-    Change status of an order (synchronous).
+    Change status of an order .
     """
 
     order_id = int(input("Enter order ID to change status: "))
@@ -193,7 +193,6 @@ async def cancel_order() -> None:
     print("Order canceled successfully!")
     logger.info(f"Order ID {order_id} canceled.")
 
-    # Also update status for safety
     query2 = "UPDATE orders SET status = 'canceled' WHERE id = $1"
     await fetch_query(query=query2, params=params)
     logger.info(f"Order ID {order_id} status set to canceled.")
